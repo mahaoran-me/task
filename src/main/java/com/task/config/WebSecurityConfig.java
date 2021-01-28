@@ -2,6 +2,7 @@ package com.task.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.task.dto.SimpleResponse;
+import com.task.security.UserDetailImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -35,8 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginProcessingUrl("/api/login")
-                .successHandler((httpServletRequest, httpServletResponse, authentication)
-                        -> responseProcess(httpServletResponse, new SimpleResponse(1, "登录成功")))
+                .successHandler((httpServletRequest, httpServletResponse, authentication) -> {
+                    UserDetailImpl details = (UserDetailImpl) authentication.getPrincipal();
+                    httpServletRequest.getSession().setAttribute("localUser", details.getUser());
+                    responseProcess(httpServletResponse, new SimpleResponse(1, "登录成功"));
+                })
                 .failureHandler((httpServletRequest, httpServletResponse, e)
                         -> responseProcess(httpServletResponse, new SimpleResponse(0, "登录失败")))
                 .and()
