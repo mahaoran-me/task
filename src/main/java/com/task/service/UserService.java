@@ -6,9 +6,24 @@ import com.task.dto.UpdateUserRequest;
 
 public interface UserService {
 
+    /**
+     * 注册用户
+     * @param request 注册请求
+     * @return 通用返回值
+     */
     SimpleResponse register(RegisterRequest request);
 
+    /**
+     * 注销用户
+     * @param id 用户id
+     * @return 通用返回值
+     */
     SimpleResponse unRegister(Integer id);
 
+    /**
+     * 修改用户信息
+     * @param request 用户信息
+     * @return 通用返回值
+     */
     SimpleResponse updateInfo(UpdateUserRequest request);
 }

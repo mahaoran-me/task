@@ -5,6 +5,7 @@ import com.task.dto.SimpleResponse;
 import com.task.entity.Task;
 import com.task.entity.User;
 import com.task.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ public class TaskController {
 
     private final TaskService taskService;
 
+    @Autowired
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
