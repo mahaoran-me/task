@@ -26,6 +26,12 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    @GetMapping("/task/all")
+    public List<Task> all(HttpSession session) {
+        User user = (User) session.getAttribute("localUser");
+        return taskService.findInAll(user.getId());
+    }
+
     @GetMapping("/task/today")
     public List<Task> today(HttpSession session) {
         User user = (User) session.getAttribute("localUser");
@@ -34,12 +40,6 @@ public class TaskController {
 
     @GetMapping("/task/week")
     public List<Task> week(HttpSession session) {
-        User user = (User) session.getAttribute("localUser");
-        return taskService.findInWeek(user.getId());
-    }
-
-    @PostMapping("/task/week")
-    public List<Task> weekAdd(HttpSession session) {
         User user = (User) session.getAttribute("localUser");
         return taskService.findInWeek(user.getId());
     }
@@ -94,10 +94,30 @@ public class TaskController {
     }
 
     @PostMapping("/task/update")
-    public GenericResponse update(@RequestBody UpdateTaskRequest request, HttpSession session) {
+    public GenericResponse<Task> update(@RequestBody UpdateTaskRequest request, HttpSession session) {
         Task task = taskService.findById(request.getId());
         DtoUtil.updateTaskRequestToTask(request, task);
         task = taskService.updateTask(task);
         return new GenericResponse<Task>(1, "修改成功", task);
+    }
+
+    @GetMapping("/task/delete/{id}")
+    public SimpleResponse delete(@PathVariable int id) {
+        Task task = taskService.findById(id);
+        if (task == null) {
+            return new SimpleResponse(0, "任务不存在");
+        }
+        taskService.deleteTask(id);
+        return new SimpleResponse(1, "移入回收站");
+    }
+
+    @GetMapping("/task/undelete/{id}")
+    public SimpleResponse undelete(@PathVariable int id) {
+        Task task = taskService.findById(id);
+        if (task == null) {
+            return new SimpleResponse(0, "任务不存在");
+        }
+        taskService.unDeleteTask(id);
+        return new SimpleResponse(1, "移出回收站");
     }
 }

@@ -15,6 +15,9 @@ public interface TaskMapper {
     @Select("select * from task where uid = #{uid}")
     List<Task> selectByUid(int uid);
 
+    @Select("select * from task where uid = #{uid} and deleted = 0")
+    List<Task> selectAll(int uid);
+
     @Select("select * from task where uid = #{uid} and deleted = 0 and end_time between #{start} and #{end}")
     List<Task> selectByDay(int uid, LocalDate start, LocalDate end);
 
@@ -36,8 +39,11 @@ public interface TaskMapper {
             "deleted = #{deleted} where id = #{id}")
     void update(Task task);
 
-    @Delete("delete from task where id = #{id}")
+    @Update("update task set deleted = 1 where id = #{id}")
     void delete(int id);
+
+    @Update("update task set deleted = 0 where id = #{id}")
+    void unDelete(int id);
 
     @Update("update task set timeout = 1 where id = #{id}")
     void timeout(int id);

@@ -19,6 +19,8 @@ public interface TaskService {
      */
     List<Task> findByUid(int uid);
 
+    List<Task> findInAll(int uid);
+
     /**
      * 查询用户今日任务
      * @param uid 用户id
@@ -78,4 +80,6 @@ public interface TaskService {
      * @param id 任务id
      */
     void deleteTask(int id);
+
+    void unDeleteTask(int id);
 }

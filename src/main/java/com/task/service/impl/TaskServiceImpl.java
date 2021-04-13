@@ -33,6 +33,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> findInAll(int uid) {
+        List<Task> tasks = taskMapper.selectAll(uid);
+        timeoutFilter(tasks);
+        return tasks;
+    }
+
+    @Override
     public List<Task> findInToday(int uid) {
         LocalDate today = LocalDate.now();
         LocalDate tomorrow = today.plusDays(1);
@@ -90,6 +97,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(int id) {
         taskMapper.delete(id);
+    }
+
+    @Override
+    public void unDeleteTask(int id) {
+        taskMapper.unDelete(id);
     }
 
     private void timeoutFilter(List<Task> tasks) {
