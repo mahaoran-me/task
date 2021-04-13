@@ -32,7 +32,7 @@ public interface TaskMapper {
     void insert(Task task);
 
     @Update("update task set title = #{title}, content = #{content}, level = #{level}, start_time = #{startTime}," +
-            "end_time = #{endTime}, done_time = #{doneTime}, finished = #{finished}, timeout = #{timeout}" +
+            "end_time = #{endTime}, done_time = #{doneTime}, finished = #{finished}, timeout = #{timeout}," +
             "deleted = #{deleted} where id = #{id}")
     void update(Task task);
 
@@ -41,4 +41,7 @@ public interface TaskMapper {
 
     @Update("update task set timeout = 1 where id = #{id}")
     void timeout(int id);
+
+    @Update("update task set timeout = 0 where id = #{id}")
+    void unTimeout(int id);
 }

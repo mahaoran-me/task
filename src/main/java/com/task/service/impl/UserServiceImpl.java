@@ -63,4 +63,9 @@ public class UserServiceImpl implements UserService {
         userMapper.update(user);
         return new SimpleResponse(1, "修改成功");
     }
+
+    @Override
+    public User findUserById(int id) {
+        return userMapper.selectById(id);
+    }
 }

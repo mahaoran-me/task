@@ -39,7 +39,9 @@ public class UserController {
     }
 
     @PostMapping("/updateUserInfo")
-    public SimpleResponse updateUserInfo(@RequestBody UpdateUserRequest request) {
-        return userService.updateInfo(request);
+    public SimpleResponse updateUserInfo(@RequestBody UpdateUserRequest request, HttpSession session) {
+        SimpleResponse simpleResponse = userService.updateInfo(request);
+        session.setAttribute("localUser", userService.findUserById(request.getId()));
+        return simpleResponse;
     }
 }

@@ -22,12 +22,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task findById(int id) {
-        return taskMapper.selectById(id);
+        return timeoutFilter(taskMapper.selectById(id));
     }
 
     @Override
     public List<Task> findByUid(int uid) {
-        return taskMapper.selectByUid(uid);
+        List<Task> tasks = taskMapper.selectByUid(uid);
+        timeoutFilter(tasks);
+        return tasks;
     }
 
     @Override
@@ -80,8 +82,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void updateTask(Task task) {
+    public Task updateTask(Task task) {
         taskMapper.update(task);
+        return findById(task.getId());
     }
 
     @Override
@@ -92,10 +95,25 @@ public class TaskServiceImpl implements TaskService {
     private void timeoutFilter(List<Task> tasks) {
         LocalDateTime now = LocalDateTime.now();
         for (var task : tasks) {
-            if (now.isAfter(task.getEndTime())) {
+            if (now.isAfter(task.getEndTime()) && !task.getTimeout()) {
                 taskMapper.timeout(task.getId());
                 task.setTimeout(true);
+            } else if (!now.isAfter(task.getEndTime()) && task.getTimeout()) {
+                taskMapper.unTimeout(task.getId());
+                task.setTimeout(false);
             }
         }
+    }
+
+    private Task timeoutFilter(Task task) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(task.getEndTime()) && !task.getTimeout()) {
+            taskMapper.timeout(task.getId());
+            task.setTimeout(true);
+        } else if (!now.isAfter(task.getEndTime()) && task.getTimeout()) {
+            taskMapper.unTimeout(task.getId());
+            task.setTimeout(false);
+        }
+        return task;
     }
 }

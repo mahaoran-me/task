@@ -71,7 +71,7 @@ public interface TaskService {
      * 更新任务
      * @param task 任务
      */
-    void updateTask(Task task);
+    Task updateTask(Task task);
 
     /**
      * 删除任务

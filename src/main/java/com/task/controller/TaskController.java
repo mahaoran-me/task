@@ -1,7 +1,6 @@
 package com.task.controller;
 
-import com.task.dto.CreateTaskRequest;
-import com.task.dto.SimpleResponse;
+import com.task.dto.*;
 import com.task.entity.Task;
 import com.task.entity.User;
 import com.task.service.TaskService;
@@ -92,5 +91,13 @@ public class TaskController {
         }
         taskService.createTask(task);
         return new SimpleResponse(1, "创建成功");
+    }
+
+    @PostMapping("/task/update")
+    public GenericResponse update(@RequestBody UpdateTaskRequest request, HttpSession session) {
+        Task task = taskService.findById(request.getId());
+        DtoUtil.updateTaskRequestToTask(request, task);
+        task = taskService.updateTask(task);
+        return new GenericResponse<Task>(1, "修改成功", task);
     }
 }

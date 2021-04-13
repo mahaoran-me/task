@@ -3,6 +3,7 @@ package com.task.service;
 import com.task.dto.RegisterRequest;
 import com.task.dto.SimpleResponse;
 import com.task.dto.UpdateUserRequest;
+import com.task.entity.User;
 
 public interface UserService {
 
@@ -26,4 +27,6 @@ public interface UserService {
      * @return 通用返回值
      */
     SimpleResponse updateInfo(UpdateUserRequest request);
+
+    User findUserById(int id);
 }
