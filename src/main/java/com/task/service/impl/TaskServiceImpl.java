@@ -40,10 +40,26 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> searchInAll(int uid, String pattern) {
+        List<Task> tasks = taskMapper.searchAll(uid, "%" + pattern + "%");
+        timeoutFilter(tasks);
+        return tasks;
+    }
+
+    @Override
     public List<Task> findInToday(int uid) {
         LocalDate today = LocalDate.now();
         LocalDate tomorrow = today.plusDays(1);
         List<Task> tasks = taskMapper.selectByDay(uid, today, tomorrow);
+        timeoutFilter(tasks);
+        return tasks;
+    }
+
+    @Override
+    public List<Task> searchInToday(int uid, String pattern) {
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        List<Task> tasks = taskMapper.searchByDay(uid, today, tomorrow, "%" + pattern + "%");
         timeoutFilter(tasks);
         return tasks;
     }
@@ -59,6 +75,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> searchInWeek(int uid, String pattern) {
+        LocalDate today = LocalDate.now();
+        LocalDate monday = today.with(DayOfWeek.MONDAY);
+        LocalDate nextMonday = monday.plusDays(7);
+        List<Task> tasks = taskMapper.searchByDay(uid, monday, nextMonday, "%" + pattern + "%");
+        timeoutFilter(tasks);
+        return tasks;
+    }
+
+    @Override
     public List<Task> findInMonth(int uid) {
         LocalDate today = LocalDate.now();
         LocalDate firstDay = today.with(TemporalAdjusters.firstDayOfMonth());
@@ -69,8 +95,23 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> searchInMonth(int uid, String pattern) {
+        LocalDate today = LocalDate.now();
+        LocalDate firstDay = today.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate nextFirstDay = today.with(TemporalAdjusters.lastDayOfMonth()).plusDays(1);
+        List<Task> tasks = taskMapper.searchByDay(uid, firstDay, nextFirstDay, "%" + pattern + "%");
+        timeoutFilter(tasks);
+        return tasks;
+    }
+
+    @Override
     public List<Task> findFinished(int uid) {
         return taskMapper.selectFinished(uid);
+    }
+
+    @Override
+    public List<Task> searchFinished(int uid, String pattern) {
+        return taskMapper.searchFinished(uid, "%" + pattern + "%");
     }
 
     @Override
@@ -79,8 +120,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> searchTimeout(int uid, String pattern) {
+        return taskMapper.searchTimeout(uid, "%" + pattern + "%");
+    }
+
+    @Override
     public List<Task> findDeleted(int uid) {
         return taskMapper.selectDeleted(uid);
+    }
+
+    @Override
+    public List<Task> searchDeleted(int uid, String pattern) {
+        return taskMapper.searchDeleted(uid, "%" + pattern + "%");
     }
 
     @Override

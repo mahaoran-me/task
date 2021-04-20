@@ -26,6 +26,30 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    @GetMapping("/task/search")
+    public List<Task> search(HttpSession session, @RequestParam String type, @RequestParam String pattern) {
+        User user = (User) session.getAttribute("localUser");
+        var id = user.getId();
+        switch (type) {
+            case "all":
+                return taskService.searchInAll(id, pattern);
+            case "today":
+                return taskService.searchInToday(id, pattern);
+            case "week":
+                return taskService.searchInWeek(id, pattern);
+            case "month":
+                return taskService.searchInMonth(id, pattern);
+            case "finished":
+                return taskService.searchFinished(id, pattern);
+            case "timeout":
+                return taskService.searchTimeout(id, pattern);
+            case "deleted":
+                return taskService.searchDeleted(id, pattern);
+            default:
+                return null;
+        }
+    }
+
     @GetMapping("/task/all")
     public List<Task> all(HttpSession session) {
         User user = (User) session.getAttribute("localUser");

@@ -20,6 +20,7 @@ public interface TaskService {
     List<Task> findByUid(int uid);
 
     List<Task> findInAll(int uid);
+    List<Task> searchInAll(int uid, String pattern);
 
     /**
      * 查询用户今日任务
@@ -27,6 +28,7 @@ public interface TaskService {
      * @return 任务列表
      */
     List<Task> findInToday(int uid);
+    List<Task> searchInToday(int uid, String pattern);
 
     /**
      * 查询用户本周任务
@@ -34,6 +36,7 @@ public interface TaskService {
      * @return 任务列表
      */
     List<Task> findInWeek(int uid);
+    List<Task> searchInWeek(int uid, String pattern);
 
     /**
      * 查询用户本月任务
@@ -41,6 +44,7 @@ public interface TaskService {
      * @return 任务列表
      */
     List<Task> findInMonth(int uid);
+    List<Task> searchInMonth(int uid, String pattern);
 
     /**
      * 查询用户已完成任务
@@ -48,6 +52,7 @@ public interface TaskService {
      * @return 任务列表
      */
     List<Task> findFinished(int uid);
+    List<Task> searchFinished(int uid, String pattern);
 
     /**
      * 查询用户超时任务
@@ -55,6 +60,7 @@ public interface TaskService {
      * @return 任务列表
      */
     List<Task> findTimeout(int uid);
+    List<Task> searchTimeout(int uid, String pattern);
 
     /**
      * 查询用户已删除任务
@@ -62,6 +68,7 @@ public interface TaskService {
      * @return 任务列表
      */
     List<Task> findDeleted(int uid);
+    List<Task> searchDeleted(int uid, String pattern);
 
     /**
      * 新建任务
