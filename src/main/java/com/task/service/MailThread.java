@@ -22,7 +22,7 @@ public class MailThread implements Runnable {
         while (true) {
             System.out.println("开始发送");
             this.taskService.mailNotify();
-            System.out.println("已发送");
+            System.out.println("发送结束");
             try {
                 Thread.sleep(1000 * 60 * 60);
             } catch (InterruptedException e) {

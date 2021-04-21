@@ -180,13 +180,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void mailNotify() {
-//        SimpleMailMessage mailMessage = new SimpleMailMessage();
-//        mailMessage.setFrom("1829385036@qq.com");
-//        mailMessage.setTo("crece.ma@gmail.com");
-//        mailMessage.setSubject("task消息提醒");
-//        mailMessage.setText("您好，你的任务：'" + "' 即将过期，请及时查看。");
-//        javaMailSender.send(mailMessage);
-        List<Task> res = new ArrayList<>();
+        List<Task> res;
         List<Task> tasks = taskMapper.selectAllNormal();
         var now = LocalDateTime.now();
         res = tasks.stream().filter(task -> {
