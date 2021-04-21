@@ -200,13 +200,14 @@ public class TaskServiceImpl implements TaskService {
                 mailMessage.setFrom("1829385036@qq.com");
                 mailMessage.setTo(userMapper.selectById(task.getUid()).getEmail());
                 mailMessage.setSubject("task消息提醒");
-                mailMessage.setText("您好，你的任务：'" + task.getTitle() + "' 即将过期，请及时查看。");
+                mailMessage.setText("您好，你的任务：" + task.getTitle() + " 即将过期，请及时查看。");
                 javaMailSender.send(mailMessage);
             }).start();
         });
     }
 
     private void timeoutFilter(List<Task> tasks) {
+
         LocalDateTime now = LocalDateTime.now();
         for (var task : tasks) {
             if (now.isAfter(task.getEndTime()) && !task.getTimeout()) {
