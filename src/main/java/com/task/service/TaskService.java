@@ -89,4 +89,6 @@ public interface TaskService {
     void deleteTask(int id);
 
     void unDeleteTask(int id);
+
+    List<Task> willTimeout(int uid);
 }

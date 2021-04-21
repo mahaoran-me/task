@@ -6,10 +6,13 @@ import com.task.service.TaskService;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -153,6 +156,19 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void unDeleteTask(int id) {
         taskMapper.unDelete(id);
+    }
+
+    @Override
+    public List<Task> willTimeout(int uid) {
+        List<Task> res = new ArrayList<>();
+        List<Task> tasks = taskMapper.selectUnFinished(uid);
+
+        var now = LocalDateTime.now();
+        return tasks.stream().filter(task -> {
+            var d1 = Duration.between(task.getStartTime(), now).getSeconds();
+            var d2 = Duration.between(task.getStartTime(), task.getEndTime()).getSeconds();
+            return ((double) d1) / ((double) d2) > 0.8;
+        }).collect(Collectors.toList());
     }
 
     private void timeoutFilter(List<Task> tasks) {

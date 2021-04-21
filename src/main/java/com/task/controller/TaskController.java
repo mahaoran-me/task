@@ -50,6 +50,12 @@ public class TaskController {
         }
     }
 
+    @GetMapping("/task/willTimeout")
+    public List<Task> willTimeout(HttpSession session) {
+        User user = (User) session.getAttribute("localUser");
+        return taskService.willTimeout(user.getId());
+    }
+
     @GetMapping("/task/all")
     public List<Task> all(HttpSession session) {
         User user = (User) session.getAttribute("localUser");

@@ -30,6 +30,9 @@ public interface TaskMapper {
     @Select("select * from task where uid = #{uid} and deleted = 0 and finished = 1")
     List<Task> selectFinished(int uid);
 
+    @Select("select * from task where uid = #{uid} and deleted = 0 and timeout = 0 and finished = 0")
+    List<Task> selectUnFinished(int uid);
+
     @Select("select * from task where uid = #{uid} and deleted = 0 and finished = 1 and title like #{pattern}")
     List<Task> searchFinished(int uid, String pattern);
 
