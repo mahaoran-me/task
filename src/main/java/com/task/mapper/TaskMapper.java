@@ -68,4 +68,7 @@ public interface TaskMapper {
 
     @Update("update task set timeout = 0 where id = #{id}")
     void unTimeout(int id);
+
+    @Select("select * from task where deleted = 0 and timeout = 0 and finished = 0")
+    List<Task> selectAllNormal();
 }

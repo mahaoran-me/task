@@ -1,8 +1,13 @@
 package com.task.service.impl;
 
 import com.task.entity.Task;
+import com.task.entity.User;
 import com.task.mapper.TaskMapper;
+import com.task.mapper.UserMapper;
 import com.task.service.TaskService;
+import com.task.service.UserService;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -18,9 +23,13 @@ import java.util.stream.Collectors;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskMapper taskMapper;
+    private final JavaMailSender javaMailSender;
+    private final UserMapper userMapper;
 
-    public TaskServiceImpl(TaskMapper taskMapper) {
+    public TaskServiceImpl(TaskMapper taskMapper, JavaMailSender javaMailSender, UserMapper userMapper) {
         this.taskMapper = taskMapper;
+        this.javaMailSender = javaMailSender;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -160,15 +169,41 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> willTimeout(int uid) {
-        List<Task> res = new ArrayList<>();
         List<Task> tasks = taskMapper.selectUnFinished(uid);
-
         var now = LocalDateTime.now();
         return tasks.stream().filter(task -> {
             var d1 = Duration.between(task.getStartTime(), now).getSeconds();
             var d2 = Duration.between(task.getStartTime(), task.getEndTime()).getSeconds();
             return ((double) d1) / ((double) d2) > 0.8;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void mailNotify() {
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setFrom("1829385036@qq.com");
+//        mailMessage.setTo("crece.ma@gmail.com");
+//        mailMessage.setSubject("task消息提醒");
+//        mailMessage.setText("您好，你的任务：'" + "' 即将过期，请及时查看。");
+//        javaMailSender.send(mailMessage);
+        List<Task> res = new ArrayList<>();
+        List<Task> tasks = taskMapper.selectAllNormal();
+        var now = LocalDateTime.now();
+        res = tasks.stream().filter(task -> {
+            var d1 = Duration.between(task.getStartTime(), now).getSeconds();
+            var d2 = Duration.between(task.getStartTime(), task.getEndTime()).getSeconds();
+            return ((double) d1) / ((double) d2) > 0.8;
+        }).collect(Collectors.toList());
+        res.forEach(task -> {
+            new Thread(() -> {
+                SimpleMailMessage mailMessage = new SimpleMailMessage();
+                mailMessage.setFrom("1829385036@qq.com");
+                mailMessage.setTo(userMapper.selectById(task.getUid()).getEmail());
+                mailMessage.setSubject("task消息提醒");
+                mailMessage.setText("您好，你的任务：'" + task.getTitle() + "' 即将过期，请及时查看。");
+                javaMailSender.send(mailMessage);
+            }).start();
+        });
     }
 
     private void timeoutFilter(List<Task> tasks) {

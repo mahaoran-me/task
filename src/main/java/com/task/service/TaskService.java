@@ -90,5 +90,7 @@ public interface TaskService {
 
     void unDeleteTask(int id);
 
+    void mailNotify();
+
     List<Task> willTimeout(int uid);
 }

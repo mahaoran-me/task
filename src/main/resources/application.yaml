@@ -9,6 +9,22 @@ spring:
     username: administrator
     password: administrator
     driver-class-name: com.mysql.cj.jdbc.Driver
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 1829385036@qq.com
+    password: yzqdiqdsgjgcechd
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactor
+          auth: true
+          ssl:
+            enable: true
+        debug: true
+    protocol: smtp
 logging:
   level:
     com.task: debug
